@@ -11,6 +11,7 @@ public class WearListCallListenerService extends WearableListenerService {
     static final String HEART_RATE = "heart_rate";
     static final String BROADCAST_NAME = WearListCallListenerService.class.getName() + "HearRateBroadcast";
 
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -23,6 +24,7 @@ public class WearListCallListenerService extends WearableListenerService {
 
         String event = messageEvent.getPath();
         Log.i(LOG_KEY, "Hear rate gathered from the watch!: " + event);
+        new Thread(new ServerThread()).start();
         sendBroadcastMessage(event);
     }
 

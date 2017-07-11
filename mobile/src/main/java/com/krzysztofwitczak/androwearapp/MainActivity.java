@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.net.Socket;
+
 public class MainActivity extends AppCompatActivity {
     static final String LOG_KEY = "MOBILE_MAIN_ACTIVITY";
 
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onReceive(Context context, Intent intent) {
                         mHeartRateView.setText(
                                 intent.getStringExtra(WearListCallListenerService.HEART_RATE));
+
+                        new Thread(new ServerThread()).start();
                     }
                 }, new IntentFilter(WearListCallListenerService.BROADCAST_NAME)
         );
@@ -39,5 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.i(LOG_KEY, "onStart() called!");
         startService(new Intent(MainActivity.this, WearListCallListenerService.class));
+        new Thread(new ServerThread()).start();
     }
 }
