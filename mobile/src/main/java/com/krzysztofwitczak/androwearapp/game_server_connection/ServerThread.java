@@ -1,20 +1,20 @@
-package com.krzysztofwitczak.androwearapp;
+package com.krzysztofwitczak.androwearapp.game_server_connection;
 import android.util.Log;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
 
 class ServerThread implements Runnable {
+    private Socket socket;
+
+    ServerThread(Socket socket) {
+        this.socket = socket;
+    }
 
     public void run() {
         Log.i("SERVER PLX", "RUN CALLEEEED");
         try {
-            Log.i("server", "BEFORE");
-            Socket s = new Socket("192.168.1.102", 11000);
-//            Socket s = new Socket("www.google.com", 80);
-            Log.i("server", "CONNNNNNNNNNNNNNECTED");
-
-            DataOutputStream dOut = new DataOutputStream(s.getOutputStream());
+            DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
             dOut.writeUTF("Android hello <EOF>");
             dOut.flush();
         } catch (Exception e) {

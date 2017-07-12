@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_settings"
+        style="?android:attr/actionOverflowButtonStyle"
+        app:showAsAction="ifRoom"
+        android:onClick="openGameSetting"
+        android:title="Connect to game" />
+</menu>
