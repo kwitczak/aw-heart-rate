@@ -1,8 +1,11 @@
 package com.krzysztofwitczak.androwearapp.game_server_connection;
 import android.util.Log;
 
+import com.krzysztofwitczak.androwearapp.emotions.Emotion;
+
 import java.io.DataOutputStream;
 import java.net.Socket;
+import java.util.Random;
 
 class ServerThread implements Runnable {
     private Socket socket;
@@ -12,13 +15,14 @@ class ServerThread implements Runnable {
     }
 
     public void run() {
-        Log.i("SERVER PLX", "RUN CALLEEEED");
         try {
             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-            dOut.writeUTF("Android hello <EOF>");
+            Emotion emotion = Emotion.randomEmotion();
+            int heartRate = new Random().nextInt(50) + 40;
+            dOut.writeUTF("{\"emotion\":\"" + emotion + "\",\"heartBeat\":" + heartRate + "}");
             dOut.flush();
         } catch (Exception e) {
-            Log.i("server", "ERRRRRRORRR");
+            Log.i("server", "Error occurred in data sync!");
             e.printStackTrace();
         }
     }
