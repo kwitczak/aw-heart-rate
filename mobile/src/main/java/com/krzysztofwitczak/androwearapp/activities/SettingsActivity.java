@@ -47,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         GameConnectionHelper.setupConnection(newIP);
         if (GameConnectionHelper.connectionSuccessful) {
             Log.i(LOG_KEY, "Connection with server successful!");
-            GameConnectionHelper.transmitHeartData();
+            // TODO: Show some success message?
         }
 
         Intent intent = new Intent(SettingsActivity.this, MainActivity.class);

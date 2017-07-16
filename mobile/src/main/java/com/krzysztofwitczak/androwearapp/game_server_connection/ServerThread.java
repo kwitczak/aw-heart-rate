@@ -5,21 +5,24 @@ import com.krzysztofwitczak.androwearapp.emotions.Emotion;
 
 import java.io.DataOutputStream;
 import java.net.Socket;
-import java.util.Random;
 
 class ServerThread implements Runnable {
     private Socket socket;
+    private Emotion emotion;
+    private int heartRate;
 
-    ServerThread(Socket socket) {
+    ServerThread(Socket socket, Emotion emotion, int heartRate) {
         this.socket = socket;
+        this.emotion = emotion;
+        this.heartRate = heartRate;
     }
 
     public void run() {
         try {
             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-            Emotion emotion = Emotion.randomEmotion();
-            int heartRate = new Random().nextInt(50) + 40;
-            dOut.writeUTF("{\"emotion\":\"" + emotion + "\",\"heartBeat\":" + heartRate + "}");
+            String msg = "{\"emotion\":\"" + emotion + "\",\"heartBeat\":" + heartRate + "}";
+            Log.i("server", "SENDING: " + msg);
+            dOut.writeUTF(msg);
             dOut.flush();
         } catch (Exception e) {
             Log.i("server", "Error occurred in data sync!");

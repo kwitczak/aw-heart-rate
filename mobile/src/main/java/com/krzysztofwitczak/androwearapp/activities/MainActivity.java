@@ -39,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
                         mHeartRateView.setText(
                                 intent.getStringExtra(WearListCallListenerService.HEART_RATE));
 
-                       // new Thread(new ServerThread()).start();
                     }
                 }, new IntentFilter(WearListCallListenerService.BROADCAST_NAME)
         );

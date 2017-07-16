@@ -106,7 +106,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        mRateValue = Float.toString(event.values[0]);
+        mRateValue = Integer.toString(Math.round(event.values[0]));
         Log.i(LOG_KEY, mRateValue);
         updateDisplay();
 

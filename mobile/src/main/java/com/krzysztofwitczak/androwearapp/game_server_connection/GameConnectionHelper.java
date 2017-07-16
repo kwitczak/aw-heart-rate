@@ -1,5 +1,7 @@
 package com.krzysztofwitczak.androwearapp.game_server_connection;
 
+import com.krzysztofwitczak.androwearapp.emotions.Emotion;
+
 import java.io.IOException;
 import java.net.Socket;
 
@@ -31,7 +33,7 @@ public class GameConnectionHelper {
         }
     }
 
-    public static void transmitHeartData() {
-        new Thread(new ServerThread(socket)).start();
+    public static void transmitHeartData(Emotion emotion, int heartRate) {
+        new Thread(new ServerThread(socket, emotion, heartRate)).start();
     }
 }

@@ -5,6 +5,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
+import com.krzysztofwitczak.androwearapp.emotions.Emotion;
+import com.krzysztofwitczak.androwearapp.game_server_connection.GameConnectionHelper;
 
 public class WearListCallListenerService extends WearableListenerService {
     public static final String LOG_KEY = "WEAR_SERVICE";
@@ -22,10 +24,18 @@ public class WearListCallListenerService extends WearableListenerService {
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
 
-        String event = messageEvent.getPath();
-        Log.i(LOG_KEY, "Hear rate gathered from the watch!: " + event);
-//        new Thread(new ServerThread()).start();
-        sendBroadcastMessage(event);
+        String heartRate = messageEvent.getPath();
+        Log.i(LOG_KEY, "Hear rate gathered from the watch!: " + heartRate);
+
+        // TODO: Calculate Emotion here, send it to UI + HearRate
+
+        if (GameConnectionHelper.connectionSuccessful) {
+            GameConnectionHelper.transmitHeartData(
+                    Emotion.randomEmotion(),
+                    Integer.parseInt(heartRate));
+        }
+
+        sendBroadcastMessage(heartRate);
     }
 
     private void sendBroadcastMessage(String hearRate) {
