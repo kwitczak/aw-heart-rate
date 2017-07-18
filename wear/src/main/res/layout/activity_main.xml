@@ -9,19 +9,25 @@
     tools:context="com.krzysztofwitczak.androwearapp.activities.MainActivity"
     tools:deviceIds="wear">
 
-    <TextView
-        android:id="@+id/text"
-        app:layout_box="all"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_world" />
+    <ImageView
+        android:id="@+id/heart"
+        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center"
+        android:src="@drawable/heart" />
 
     <TextView
-        android:id="@+id/clock"
-        app:layout_box="all"
-        android:layout_gravity="bottom|start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/white" />
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:text="70 Bpm"
+        android:textAlignment="center"
+        android:textColor="#D76A85"
+        android:textSize="20sp"
+        app:layout_box="all" />
+
 
 </android.support.wearable.view.BoxInsetLayout>

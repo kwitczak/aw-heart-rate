@@ -11,6 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.krzysztofwitczak.androwearapp.R;
@@ -24,20 +28,28 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_KEY, "onCreate() called!");
+
         setContentView(R.layout.activity_main);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-
-        Log.i(LOG_KEY, "onCreate() called!");
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mHeartRateView = (TextView) findViewById(R.id.heart_rate_mobile);
+
+        ImageView imageView = (ImageView) findViewById(R.id.circle);
+        Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
+        imageView.startAnimation(pulse);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
                         mHeartRateView.setText(
-                                intent.getStringExtra(WearListCallListenerService.HEART_RATE));
+                                String.format(
+                                        "%s Bpm",
+                                        intent.getStringExtra(
+                                                WearListCallListenerService.HEART_RATE)));
 
                     }
                 }, new IntentFilter(WearListCallListenerService.BROADCAST_NAME)
@@ -57,11 +69,14 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.i(LOG_KEY, "onStart() called!");
         startService(new Intent(MainActivity.this, WearListCallListenerService.class));
-//        new Thread(new ServerThread()).start();
     }
 
     public void openGameSetting(MenuItem item) {
         Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // TODO: Emotions handler
     }
 }
