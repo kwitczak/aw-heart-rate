@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Random;
 
 public enum Emotion {
-    NEUTRAL,
-    CALM,
+    BORED,
+    FOCUSED,
     STRESSED;
 
     private static final List<Emotion> VALUES =

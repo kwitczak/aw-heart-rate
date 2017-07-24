@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     static final String LOG_KEY = "MOBILE_MAIN_ACTIVITY";
 
     private TextView mHeartRateView;
+    private TextView mEmotionView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mHeartRateView = (TextView) findViewById(R.id.heart_rate_mobile);
+        mEmotionView = (TextView) findViewById(R.id.emotion);
 
         ImageView imageView = (ImageView) findViewById(R.id.circle);
         Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
@@ -50,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
                                         "%s Bpm",
                                         intent.getStringExtra(
                                                 WearListCallListenerService.HEART_RATE)));
+                        mEmotionView.setText(intent.getStringExtra(
+                                WearListCallListenerService.EMOTION_NAME));
 
                     }
                 }, new IntentFilter(WearListCallListenerService.BROADCAST_NAME)
