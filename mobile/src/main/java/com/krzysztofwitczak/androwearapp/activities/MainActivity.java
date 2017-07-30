@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         mHeartRateView = (TextView) findViewById(R.id.heart_rate_mobile);
-        mEmotionView = (TextView) findViewById(R.id.emotion);
+        mEmotionView = (TextView) findViewById(R.id.emotionType);
 
         ImageView imageView = (ImageView) findViewById(R.id.circle);
         Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
@@ -52,8 +52,12 @@ public class MainActivity extends AppCompatActivity {
                                         "%s Bpm",
                                         intent.getStringExtra(
                                                 WearListCallListenerService.HEART_RATE)));
-                        mEmotionView.setText(intent.getStringExtra(
-                                WearListCallListenerService.EMOTION_NAME));
+
+                        String emotionText = String.format(
+                                "%s (%s%%)",
+                                intent.getStringExtra(WearListCallListenerService.EMOTION_NAME),
+                                intent.getStringExtra(WearListCallListenerService.EMOTION_CERTAINTY));
+                        mEmotionView.setText(emotionText);
 
                     }
                 }, new IntentFilter(WearListCallListenerService.BROADCAST_NAME)

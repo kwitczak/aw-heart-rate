@@ -1,21 +1,27 @@
 package com.krzysztofwitczak.androwearapp.emotions;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+public class Emotion {
+    private EmotionType emotionType;
+    private float certainty;
 
-public enum Emotion {
-    BORED,
-    FOCUSED,
-    STRESSED;
+    public Emotion(EmotionType emotionType, float certainty){
+        this.emotionType = emotionType;
+        this.certainty = certainty;
+    }
 
-    private static final List<Emotion> VALUES =
-            Collections.unmodifiableList(Arrays.asList(values()));
-    private static final int SIZE = VALUES.size();
-    private static final Random RANDOM = new Random();
+    public EmotionType getEmotionType() {
+        return emotionType;
+    }
 
-    public static Emotion randomEmotion()  {
-        return VALUES.get(RANDOM.nextInt(SIZE));
+    public void setEmotionType(EmotionType emotionType) {
+        this.emotionType = emotionType;
+    }
+
+    public float getCertainty() {
+        return certainty;
+    }
+
+    public void setCertainty(float certainty) {
+        this.certainty = certainty;
     }
 }

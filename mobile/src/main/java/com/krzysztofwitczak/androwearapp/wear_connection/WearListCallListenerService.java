@@ -13,6 +13,7 @@ public class WearListCallListenerService extends WearableListenerService {
     public static final String LOG_KEY = "WEAR_SERVICE";
     public static final String HEART_RATE = "heart_rate";
     public static final String EMOTION_NAME = "emotion_name";
+    public static final String EMOTION_CERTAINTY = "emotion_certainty";
     public static final String BROADCAST_NAME = WearListCallListenerService.class.getName() + "HearRateBroadcast";
 
     private EmotionClassifier emotionClassifier;
@@ -32,7 +33,7 @@ public class WearListCallListenerService extends WearableListenerService {
         int heartRate = Integer.parseInt(messageEvent.getPath());
         Log.i(LOG_KEY, "Heart rate gathered from the watch!: " + heartRate);
 
-        // TODO: Calculate Emotion here, send it to UI + HeartRate
+        // TODO: Calculate EmotionType here, send it to UI + HeartRate
         emotionClassifier.getHeartData().add(heartRate);
         Emotion emotion = emotionClassifier.getEmotion();
 
@@ -42,15 +43,17 @@ public class WearListCallListenerService extends WearableListenerService {
                     heartRate);
         }
 
-        String emotionName = emotion.toString();
+        String emotionName = emotion.getEmotionType().toString();
         sendBroadcastMessage(Integer.toString(heartRate),
-                emotionName.substring(0, 1) + emotionName.substring(1).toLowerCase());
+                emotionName.substring(0, 1) + emotionName.substring(1).toLowerCase(),
+                Integer.toString(Math.round(emotion.getCertainty())));
     }
 
-    private void sendBroadcastMessage(String hearRate, String emotion) {
+    private void sendBroadcastMessage(String hearRate, String emotion, String certainty) {
             Intent intent = new Intent(BROADCAST_NAME);
             intent.putExtra(HEART_RATE, hearRate);
             intent.putExtra(EMOTION_NAME, emotion);
+            intent.putExtra(EMOTION_CERTAINTY, certainty);
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
