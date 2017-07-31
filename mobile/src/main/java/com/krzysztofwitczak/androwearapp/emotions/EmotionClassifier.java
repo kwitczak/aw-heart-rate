@@ -13,6 +13,11 @@ public class EmotionClassifier {
     private int boredThreshold;
     private int stressedThreshold;
 
+    private static Emotion emulatedEmotion;
+
+    public enum Algorithm { DEFAULT, SENSAURA, EMULATION }
+    public static Algorithm currentAlgorithm = Algorithm.DEFAULT;
+
     public EmotionClassifier() {
         heartData = new ArrayList<Integer>();
     }
@@ -21,10 +26,25 @@ public class EmotionClassifier {
         return heartData;
     }
 
-    public Emotion getEmotion() {
+    public static void emulateEmotion(Emotion emotion) {
+        emulatedEmotion = emotion;
+        currentAlgorithm = Algorithm.EMULATION;
+    }
 
-        // TODO: Implement different algorithms
-        return simpleEmotionDetection();
+    public Emotion getEmotion() {
+        Emotion result;
+
+        switch(currentAlgorithm) {
+            case DEFAULT:
+                result = simpleEmotionDetection();
+                break;
+            case EMULATION:
+                result = emulatedEmotion;
+                break;
+            default:
+                result = simpleEmotionDetection();
+        }
+        return result;
     }
 
     private Emotion simpleEmotionDetection() {

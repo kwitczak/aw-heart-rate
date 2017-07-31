@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.krzysztofwitczak.androwearapp.R;
+import com.krzysztofwitczak.androwearapp.emotions.EmotionClassifier;
 import com.krzysztofwitczak.androwearapp.wear_connection.WearListCallListenerService;
 
 public class MainActivity extends AppCompatActivity {
@@ -85,6 +86,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onRadioButtonClicked(View view) {
-        // TODO: Emotions handler
+        EmotionClassifier.currentAlgorithm = EmotionClassifier.Algorithm.DEFAULT;
+    }
+
+    public void showEmulateModal(View view) {
+        new EmulateDialog().show(getSupportFragmentManager(), "EmulateDialog");
     }
 }
