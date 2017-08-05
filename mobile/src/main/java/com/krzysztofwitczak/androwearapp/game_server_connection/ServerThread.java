@@ -23,7 +23,8 @@ class ServerThread implements Runnable {
     public void run() {
         try {
             DataOutputStream dOut = new DataOutputStream(socket.getOutputStream());
-            String msg = "{\"emotionType\":\"" + emotionType + "\",\"heartBeat\":" + heartRate + ",\"certainty\":" + certainty + "}";
+            String msg = String.format("{\"emotionType\":\"%s\",\"heartBeat\":%d,\"certainty\":%d}",
+                         emotionType, heartRate, Math.round(certainty));
             Log.i("server", "SENDING: " + msg);
             dOut.writeUTF(msg);
 

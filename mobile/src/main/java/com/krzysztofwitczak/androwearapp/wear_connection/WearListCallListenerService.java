@@ -50,10 +50,10 @@ public class WearListCallListenerService extends WearableListenerService {
     }
 
     private void sendBroadcastMessage(String hearRate, String emotion, String certainty) {
-            Intent intent = new Intent(BROADCAST_NAME);
-            intent.putExtra(HEART_RATE, hearRate);
-            intent.putExtra(EMOTION_NAME, emotion);
-            intent.putExtra(EMOTION_CERTAINTY, certainty);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Intent intent = new Intent(BROADCAST_NAME);
+        intent.putExtra(HEART_RATE, hearRate);
+        intent.putExtra(EMOTION_NAME, emotion);
+        intent.putExtra(EMOTION_CERTAINTY, certainty);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
