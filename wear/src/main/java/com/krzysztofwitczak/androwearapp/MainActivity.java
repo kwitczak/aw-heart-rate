@@ -15,7 +15,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
 import android.util.Log;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -29,15 +28,15 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
-public class MainActivity extends WearableActivity implements SensorEventListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+public class MainActivity extends WearableActivity implements
+        SensorEventListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener  {
 
     static final String LOG_KEY = "WEAR_MAIN_ACTIVITY";
-    private static final SimpleDateFormat AMBIENT_DATE_FORMAT =
-            new SimpleDateFormat("HH:mm", Locale.US);
 
     // Layout variables
     private BoxInsetLayout mContainerView;
@@ -46,11 +45,14 @@ public class MainActivity extends WearableActivity implements SensorEventListene
     // Connect to mobile
     private GoogleApiClient mGoogleApiClient;
     private Node mNode; // the connected device to send the message to
+    private Timer mTimer;
 
     // Sensor variables
     private SensorManager mSensorManager;
     private Sensor mHearRateSensor;
     private String mRateValue = "Rate unknown";
+    private String lastRateValue;
+    private boolean isConnected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                                              .addConnectionCallbacks(this)
                                              .addOnConnectionFailedListener(this)
                                              .build();
+        mTimer = new Timer();
     }
 
     @Override
@@ -77,6 +80,16 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         super.onStart();
         Log.i(LOG_KEY, "onStart");
         mGoogleApiClient.connect();
+
+        mTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (!isConnected || lastRateValue == null) {
+                    return;
+                }
+                new SendToDataLayerThread(lastRateValue, lastRateValue).start();
+            }
+        }, 0, 1000);
     }
 
     @Override
@@ -107,15 +120,15 @@ public class MainActivity extends WearableActivity implements SensorEventListene
         super.onStop();
         Log.i(LOG_KEY, "onStop() called - shutting of HearRate Listener!");
         mSensorManager.unregisterListener(this);
+        mTimer.cancel();
+        mTimer.purge();
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         mRateValue = Integer.toString(Math.round(event.values[0]));
-        Log.i(LOG_KEY, mRateValue);
         updateDisplay();
-
-        new SendToDataLayerThread(mRateValue, mRateValue).start();
+        lastRateValue = mRateValue;
     }
 
     @Override
@@ -143,6 +156,7 @@ public class MainActivity extends WearableActivity implements SensorEventListene
                         }
                     }
                 });
+        isConnected = true;
     }
 
     private class SendToDataLayerThread extends Thread {
