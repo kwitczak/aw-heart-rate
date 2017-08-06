@@ -10,5 +10,5 @@ provided IP:
 ```
 
 # Screenshots
-![Watch](../readme_images/watch_1.png?raw=true)
-![Watch2](../readme_images/watch_2.png?raw=true)
+![Watch](../master/readme_images/watch_1.png?raw=true)
+![Watch2](../master/readme_images/watch_2.png?raw=true)
