@@ -4,22 +4,33 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Pack200;
 
 public class EmotionClassifier {
     public static final String LOG_KEY = "EMOTION_CLASSIFIER";
 
     private List<Integer> heartData;
     private int baseHeartRate;
-    private int boredThreshold;
-    private int stressedThreshold;
+    public int boredThreshold;
+    public int stressedThreshold;
 
     private static Emotion emulatedEmotion;
 
     public enum Algorithm { DEFAULT, SENSAURA, EMULATION }
     public static Algorithm currentAlgorithm = Algorithm.DEFAULT;
 
-    public EmotionClassifier() {
-        heartData = new ArrayList<Integer>();
+    private static EmotionClassifier instance;
+
+    public static EmotionClassifier getInstance() {
+        if (instance == null) {
+            Log.i(LOG_KEY, "New instance created!");
+            instance = new EmotionClassifier();
+        }
+        return instance;
+    }
+
+    private EmotionClassifier() {
+        resetProfile();
     }
 
     public List<Integer> getHeartData() {
@@ -45,6 +56,13 @@ public class EmotionClassifier {
                 result = simpleEmotionDetection();
         }
         return result;
+    }
+
+    public void resetProfile() {
+        heartData = new ArrayList<Integer>();
+        baseHeartRate = 0;
+        boredThreshold = 0;
+        stressedThreshold = 0;
     }
 
     private Emotion simpleEmotionDetection() {

@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mHeartRateView;
     private TextView mEmotionView;
+    private TextView mThresholdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         mHeartRateView = (TextView) findViewById(R.id.heart_rate_mobile);
         mEmotionView = (TextView) findViewById(R.id.emotionType);
+        mThresholdView = (TextView) findViewById(R.id.thresholds);
 
         ImageView imageView = (ImageView) findViewById(R.id.circle);
         Animation pulse = AnimationUtils.loadAnimation(this, R.anim.pulse);
@@ -54,12 +56,23 @@ public class MainActivity extends AppCompatActivity {
                                         intent.getStringExtra(
                                                 WearListCallListenerService.HEART_RATE)));
 
-                        String emotionText = String.format(
-                                "%s (%s%%)",
-                                intent.getStringExtra(WearListCallListenerService.EMOTION_NAME),
-                                intent.getStringExtra(WearListCallListenerService.EMOTION_CERTAINTY));
+                        String emotionText;
+                        String certainty = intent.getStringExtra(
+                                WearListCallListenerService.EMOTION_CERTAINTY);
+                        if(certainty.equals("0")) {
+                            emotionText = "Analyzing...";
+                        } else {
+                            emotionText = String.format(
+                                    "%s (%s%%)",
+                                    intent.getStringExtra(WearListCallListenerService.EMOTION_NAME),
+                                    certainty);
+                        }
                         mEmotionView.setText(emotionText);
 
+                        String thresholds = intent.getStringExtra(
+                                WearListCallListenerService.EMOTION_THRESHOLDS);
+                        if(thresholds.equals("0 - 0 Bpm")) thresholds = "Analyzing...";
+                        mThresholdView.setText(thresholds);
                     }
                 }, new IntentFilter(WearListCallListenerService.BROADCAST_NAME)
         );
@@ -91,5 +104,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void showEmulateModal(View view) {
         new EmulateDialog().show(getSupportFragmentManager(), "EmulateDialog");
+    }
+
+    public void resetProfile(MenuItem item) {
+        EmotionClassifier.getInstance().resetProfile();
     }
 }

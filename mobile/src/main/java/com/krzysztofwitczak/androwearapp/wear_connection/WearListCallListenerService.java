@@ -14,6 +14,7 @@ public class WearListCallListenerService extends WearableListenerService {
     public static final String HEART_RATE = "heart_rate";
     public static final String EMOTION_NAME = "emotion_name";
     public static final String EMOTION_CERTAINTY = "emotion_certainty";
+    public static final String EMOTION_THRESHOLDS = "EMOTION_THRESHOLDS";
     public static final String BROADCAST_NAME = WearListCallListenerService.class.getName() + "HearRateBroadcast";
 
     private EmotionClassifier emotionClassifier;
@@ -23,7 +24,7 @@ public class WearListCallListenerService extends WearableListenerService {
     public void onCreate() {
         super.onCreate();
         Log.i(LOG_KEY, "Service onCreate() called!");
-        emotionClassifier = new EmotionClassifier();
+        emotionClassifier = EmotionClassifier.getInstance();
     }
 
     @Override
@@ -46,14 +47,18 @@ public class WearListCallListenerService extends WearableListenerService {
         String emotionName = emotion.getEmotionType().toString();
         sendBroadcastMessage(Integer.toString(heartRate),
                 emotionName.substring(0, 1) + emotionName.substring(1).toLowerCase(),
-                Integer.toString(Math.round(emotion.getCertainty())));
+                Integer.toString(Math.round(emotion.getCertainty())),
+                String.format("%d - %d Bpm",
+                        emotionClassifier.boredThreshold,
+                        emotionClassifier.stressedThreshold));
     }
 
-    private void sendBroadcastMessage(String hearRate, String emotion, String certainty) {
+    private void sendBroadcastMessage(String hearRate, String emotion, String certainty, String tresholds) {
         Intent intent = new Intent(BROADCAST_NAME);
         intent.putExtra(HEART_RATE, hearRate);
         intent.putExtra(EMOTION_NAME, emotion);
         intent.putExtra(EMOTION_CERTAINTY, certainty);
+        intent.putExtra(EMOTION_THRESHOLDS, tresholds);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
